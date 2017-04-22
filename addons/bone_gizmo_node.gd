@@ -2,31 +2,34 @@ tool
 extends Spatial
 
 
-export(bool) var reset = false
 export(bool) var run = false
 export(String) var skeleton_path = "../Armature"
 export(String) var edit_bone = ""
 export(String) var animation_path = ""
-export(int) var idx = 0
 export(float) var time = 1
 
+var idx = 0
 var skeleton
 var bone
 
 func _process(delta):
-	if reset:
-		set_translation(Vector3(0,0,0))
-		set_rotation(Vector3(0,0,0))
-		set_scale(Vector3(1,1,1))
-		reset = false
-
 	if run:
 		if not edit_bone == "" and not skeleton_path == "":
 			skeleton = get_node(skeleton_path)
 			bone = skeleton.find_bone(edit_bone)
+			idx = bone
 			skeleton.set_bone_pose(bone,get_transform())
-	if Input.is_key_pressed(KEY_SPACE):
+	if Input.is_key_pressed(KEY_1):
 		insert_key()
+	if Input.is_key_pressed(KEY_2):
+		create_tracks()
+
+func create_tracks():
+	print("=== BONE GIZMO: CREATING TRACKS ===")
+	var animation = get_node(animation_path).get_animation(get_node(animation_path).get_current_animation())
+	for i in range(skeleton.get_bone_count()):
+		animation.add_track(Animation.TYPE_TRANSFORM,i)
+		animation.track_set_path(i,"Armature:" + skeleton.get_bone_name(i)) #Change armature to your actual skeleton path in animation player
 
 func insert_key():
 	print("=== BONE GIZMO: INSERT KEY ===")
