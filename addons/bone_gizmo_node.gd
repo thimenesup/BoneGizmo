@@ -1,41 +1,40 @@
 tool
 extends Spatial
 
+var run = false
 
-export(bool) var run = false
+#All paths are must be relative to the node (BoneGizmo)
 export(String) var skeleton_path = "../Armature"
 export(String) var edit_bone = ""
-export(String) var animation_path = ""
-export(float) var time = 1
+export(String) var animation_path = "../AnimationPlayer"
 
-var idx = 0
 var skeleton
-var bone
+var bone_index
 
 func _process(delta):
 	if run:
 		if not edit_bone == "" and not skeleton_path == "":
 			skeleton = get_node(skeleton_path)
-			bone = skeleton.find_bone(edit_bone)
-			idx = bone
-			skeleton.set_bone_pose(bone,get_transform())
-	if Input.is_key_pressed(KEY_1):
-		insert_key()
-	if Input.is_key_pressed(KEY_2):
-		create_tracks()
+			bone_index = skeleton.find_bone(edit_bone)
+			skeleton.set_bone_pose(bone_index,transform)
+
+
 
 func create_tracks():
-	print("=== BONE GIZMO: CREATING TRACKS ===")
-	var animation = get_node(animation_path).get_animation(get_node(animation_path).get_current_animation())
-	for i in range(skeleton.get_bone_count()):
+	var skeleton_node = get_node(skeleton_path)
+	var animation_node = get_node(animation_path)
+	var animation = animation_node.get_animation(animation_node.assigned_animation)
+	print(animation_node.current_animation)
+	for i in range(skeleton_node.get_bone_count()):
 		animation.add_track(Animation.TYPE_TRANSFORM,i)
-		animation.track_set_path(i,"Armature:" + skeleton.get_bone_name(i)) #Change armature to your actual skeleton path in animation player
+		animation.track_set_path(i,skeleton_path + ":" + skeleton_node.get_bone_name(i))
 
-func insert_key():
-	print("=== BONE GIZMO: INSERT KEY ===")
-	var rot = Quat(skeleton.get_bone_pose(bone).basis)
-	var animation = get_node(animation_path).get_animation(get_node(animation_path).get_current_animation())
-	animation.transform_track_insert_key(idx,time,skeleton.get_bone_pose(bone).origin,rot,skeleton.get_bone_pose(bone).basis.z)
 
-func _ready():
-	set_process(true)
+func insert_key(): #This will override all the bone poses in the track with the current ones
+	var skeleton_node = get_node(skeleton_path)
+	var animation_node = get_node(animation_path)
+	var animation = animation_node.get_animation(animation_node.assigned_animation)
+	for i in range(skeleton_node.get_bone_count()):
+		var bone_tr = skeleton_node.get_bone_pose(i)
+		var rot = Quat(bone_tr.basis)
+		animation.transform_track_insert_key(i,animation_node.current_animation_position,bone_tr.origin,rot,bone_tr.basis.get_scale())
