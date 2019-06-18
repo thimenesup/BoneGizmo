@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/bone_gizmo/bone_finder.gd" type="Script" id=1]
+
+[node name="bone_finder" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+margin_top = 5.0
+margin_right = 37.0
+margin_bottom = 19.0
+text = "Filter:"
+
+[node name="filter" type="LineEdit" parent="HBoxContainer"]
+margin_left = 41.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+caret_blink = true
+
+[node name="bone_list" type="ItemList" parent="."]
+margin_top = 28.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+[connection signal="text_changed" from="HBoxContainer/filter" to="." method="_on_filter_text_changed"]
+[connection signal="item_activated" from="bone_list" to="." method="_on_bone_list_item_activated"]

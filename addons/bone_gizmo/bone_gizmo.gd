@@ -11,12 +11,19 @@ export(String) var animation_path = "../AnimationPlayer"
 var skeleton
 var bone_index
 
+var initialized = false
+
 func _process(delta):
 	if run:
 		if not edit_bone == "" and not skeleton_path == "":
-			skeleton = get_node(skeleton_path)
+			skeleton = get_node(skeleton_path) as Skeleton
 			bone_index = skeleton.find_bone(edit_bone)
-			skeleton.set_bone_pose(bone_index,transform)
+			if not initialized:
+				global_transform = skeleton.get_bone_global_pose(bone_index)
+				initialized = true
+			skeleton.set_bone_global_pose(bone_index, global_transform)
+	else:
+		initialized = false
 
 
 
