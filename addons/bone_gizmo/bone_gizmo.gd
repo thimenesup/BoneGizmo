@@ -29,12 +29,19 @@ func create_tracks():
 		animation.add_track(Animation.TYPE_TRANSFORM,i)
 		animation.track_set_path(i,skeleton_path + ":" + skeleton_node.get_bone_name(i))
 
-
-func insert_key(): #This will override all the bone poses in the track with the current ones
-	var skeleton_node = get_node(skeleton_path)
-	var animation_node = get_node(animation_path)
+# This will override all the bone poses in the track with the current ones
+func insert_key():
+	var skeleton_node = get_node(skeleton_path) as Skeleton
+	var animation_node = get_node(animation_path) as AnimationPlayer
 	var animation = animation_node.get_animation(animation_node.assigned_animation)
-	for i in range(skeleton_node.get_bone_count()):
-		var bone_tr = skeleton_node.get_bone_pose(i)
-		var rot = Quat(bone_tr.basis)
-		animation.transform_track_insert_key(i,animation_node.current_animation_position,bone_tr.origin,rot,bone_tr.basis.get_scale())
+	for i in skeleton_node.get_bone_count():
+		var bone_name = skeleton_node.get_bone_name(i)
+		var bone_pose = skeleton_node.get_bone_pose(i)
+		var bone_track = animation.find_track(NodePath(skeleton_node.name + ':' + bone_name))
+		animation.transform_track_insert_key(
+			bone_track,
+			animation_node.current_animation_position,
+			bone_pose.origin,
+			Quat(bone_pose.basis),
+			bone_pose.basis.get_scale()
+		)
