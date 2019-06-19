@@ -1,0 +1,130 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/bone_gizmo/dock.gd" type="Script" id=1]
+[ext_resource path="res://addons/bone_gizmo/icon.png" type="Texture" id=2]
+[ext_resource path="res://addons/bone_gizmo/bone_finder.tscn" type="PackedScene" id=3]
+
+[node name="BoneGizmo" type="Control"]
+anchor_bottom = 1.0
+margin_right = 206.0
+mouse_filter = 1
+script = ExtResource( 1 )
+
+[node name="VBox" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBox"]
+margin_right = 206.0
+margin_bottom = 16.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+alignment = 1
+
+[node name="Info" type="Label" parent="VBox/HBoxContainer"]
+margin_left = 30.0
+margin_top = 1.0
+margin_right = 155.0
+margin_bottom = 15.0
+text = "@thimenesup V 0.1"
+
+[node name="Icon" type="TextureRect" parent="VBox/HBoxContainer"]
+margin_left = 159.0
+margin_right = 175.0
+margin_bottom = 16.0
+texture = ExtResource( 2 )
+
+[node name="FindGizmo" type="Button" parent="VBox"]
+visible = false
+margin_top = 26.0
+margin_right = 206.0
+margin_bottom = 46.0
+text = "Find Gizmo"
+
+[node name="ResetGizmo" type="Button" parent="VBox"]
+visible = false
+margin_top = 26.0
+margin_right = 206.0
+margin_bottom = 46.0
+text = "Reset Gizmo Matrix"
+
+[node name="RunGizmo" type="CheckButton" parent="VBox"]
+margin_top = 26.0
+margin_right = 206.0
+margin_bottom = 66.0
+text = "Run Gizmo"
+
+[node name="SkeletonPath" type="LineEdit" parent="VBox"]
+visible = false
+margin_top = 136.0
+margin_right = 206.0
+margin_bottom = 160.0
+placeholder_text = "Skeleton Path"
+placeholder_alpha = 0.3
+caret_blink = true
+
+[node name="Bone" type="LineEdit" parent="VBox"]
+visible = false
+margin_top = 170.0
+margin_right = 206.0
+margin_bottom = 194.0
+placeholder_text = "Skeleton Bone"
+placeholder_alpha = 0.3
+caret_blink = true
+
+[node name="AnimationPath" type="LineEdit" parent="VBox"]
+visible = false
+margin_top = 136.0
+margin_right = 206.0
+margin_bottom = 160.0
+placeholder_text = "AnimPlayer Path"
+placeholder_alpha = 0.3
+caret_blink = true
+
+[node name="CreateTracks" type="Button" parent="VBox"]
+margin_top = 76.0
+margin_right = 206.0
+margin_bottom = 96.0
+text = "Create Tracks"
+
+[node name="InsertKey" type="Button" parent="VBox"]
+margin_top = 106.0
+margin_right = 206.0
+margin_bottom = 126.0
+text = "Insert Key"
+
+[node name="FindBone" type="Label" parent="VBox"]
+margin_top = 136.0
+margin_right = 206.0
+margin_bottom = 150.0
+text = "Find Bone:"
+
+[node name="bone_finder" parent="VBox" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 160.0
+margin_right = 206.0
+margin_bottom = 600.0
+
+[node name="Disabled" type="Panel" parent="."]
+self_modulate = Color( 0.290196, 0.290196, 0.290196, 0.564706 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="Disabled"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Select a BoneGizmo node"
+align = 1
+valign = 1
+autowrap = true
+[connection signal="pressed" from="VBox/FindGizmo" to="." method="_on_FindGizmo_pressed"]
+[connection signal="pressed" from="VBox/ResetGizmo" to="." method="_on_ResetGizmo_pressed"]
+[connection signal="toggled" from="VBox/RunGizmo" to="." method="_on_RunGizmo_toggled"]
+[connection signal="text_entered" from="VBox/SkeletonPath" to="." method="_on_SkeletonPath_text_entered"]
+[connection signal="text_entered" from="VBox/Bone" to="." method="_on_Bone_text_entered"]
+[connection signal="text_entered" from="VBox/AnimationPath" to="." method="_on_AnimationPath_text_entered"]
+[connection signal="pressed" from="VBox/CreateTracks" to="." method="_on_CreateTracks_pressed"]
+[connection signal="pressed" from="VBox/InsertKey" to="." method="_on_InsertKey_pressed"]
+[connection signal="bone_selected" from="VBox/bone_finder" to="." method="_on_bone_finder_bone_selected"]
