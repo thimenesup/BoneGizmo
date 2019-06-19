@@ -1,53 +1,65 @@
 tool
 extends Spatial
 
-var run = false
+# All paths are must be relative to the node (BoneGizmo)
+export(NodePath) var skeleton_path = @"../Skeleton"
+export(NodePath) var animation_path = @"../AnimationPlayer"
 
-#All paths are must be relative to the node (BoneGizmo)
-export(String) var skeleton_path = "../Armature"
-export(String) var edit_bone = ""
-export(String) var animation_path = "../AnimationPlayer"
+var edit_bone = ""
 
-var skeleton
-var bone_index
+var running: bool setget set_running,get_running
+func get_running() -> bool: return running
+func set_running(new_val: bool) -> void:
+	if new_val and not running:
+		global_transform = get_skeleton().get_bone_global_pose(get_edit_bone_index())
+		set_process(true)
+	elif not new_val:
+		set_process(false)
+	running = new_val
 
-var initialized = false
+func _ready():
+	set_running(false)
 
 func _process(delta):
-	if run:
-		if not edit_bone == "" and not skeleton_path == "":
-			skeleton = get_node(skeleton_path) as Skeleton
-			bone_index = skeleton.find_bone(edit_bone)
-			if not initialized:
-				global_transform = skeleton.get_bone_global_pose(bone_index)
-				initialized = true
-			skeleton.set_bone_global_pose(bone_index, global_transform)
-	else:
-		initialized = false
+	var skeleton = get_skeleton()
+	var bone_index = get_edit_bone_index()
+	skeleton.set_bone_global_pose(bone_index, global_transform)
 
+func reset() -> void:
+	transform = Transform()
 
+func can_run() -> bool:
+	return (get_skeleton() != null) and (get_edit_bone_index() != -1)
+
+func get_animation_player() -> AnimationPlayer:
+	return get_node(animation_path) as AnimationPlayer
+
+func get_skeleton() -> Skeleton:
+	return get_node(skeleton_path) as Skeleton
+
+func get_edit_bone_index() -> int:
+	return get_skeleton().find_bone(edit_bone)
 
 func create_tracks():
-	var skeleton_node = get_node(skeleton_path)
-	var animation_node = get_node(animation_path)
-	var animation = animation_node.get_animation(animation_node.assigned_animation)
-	print(animation_node.current_animation)
-	for i in range(skeleton_node.get_bone_count()):
-		animation.add_track(Animation.TYPE_TRANSFORM,i)
-		animation.track_set_path(i,skeleton_path + ":" + skeleton_node.get_bone_name(i))
+	var skel = get_skeleton()
+	var anim_player = get_animation_player()
+	var anim = anim_player.get_animation(anim_player.assigned_animation)
+	for i in skel.get_bone_count():
+		anim.add_track(Animation.TYPE_TRANSFORM,i)
+		anim.track_set_path(i,skeleton_path + ":" + skel.get_bone_name(i))
 
 # This will override all the bone poses in the track with the current ones
 func insert_key():
-	var skeleton_node = get_node(skeleton_path) as Skeleton
-	var animation_node = get_node(animation_path) as AnimationPlayer
-	var animation = animation_node.get_animation(animation_node.assigned_animation)
-	for i in skeleton_node.get_bone_count():
-		var bone_name = skeleton_node.get_bone_name(i)
-		var bone_pose = skeleton_node.get_bone_pose(i)
-		var bone_track = animation.find_track(NodePath(skeleton_node.name + ':' + bone_name))
-		animation.transform_track_insert_key(
+	var skel = get_skeleton()
+	var anim_player = get_animation_player()
+	var anim = anim_player.get_animation(anim_player.assigned_animation)
+	for i in skel.get_bone_count():
+		var bone_name = skel.get_bone_name(i)
+		var bone_pose = skel.get_bone_pose(i)
+		var bone_track = anim.find_track(NodePath(skel.name + ':' + bone_name))
+		anim.transform_track_insert_key(
 			bone_track,
-			animation_node.current_animation_position,
+			anim_player.current_animation_position,
 			bone_pose.origin,
 			Quat(bone_pose.basis),
 			bone_pose.basis.get_scale()

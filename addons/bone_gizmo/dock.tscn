@@ -36,21 +36,23 @@ margin_bottom = 16.0
 texture = ExtResource( 2 )
 
 [node name="FindGizmo" type="Button" parent="VBox"]
+visible = false
 margin_top = 26.0
 margin_right = 206.0
 margin_bottom = 46.0
 text = "Find Gizmo"
 
 [node name="ResetGizmo" type="Button" parent="VBox"]
-margin_top = 56.0
+visible = false
+margin_top = 26.0
 margin_right = 206.0
-margin_bottom = 76.0
+margin_bottom = 46.0
 text = "Reset Gizmo Matrix"
 
 [node name="RunGizmo" type="CheckButton" parent="VBox"]
-margin_top = 86.0
+margin_top = 26.0
 margin_right = 206.0
-margin_bottom = 126.0
+margin_bottom = 66.0
 text = "Run Gizmo"
 
 [node name="SkeletonPath" type="LineEdit" parent="VBox"]
@@ -81,27 +83,27 @@ placeholder_alpha = 0.3
 caret_blink = true
 
 [node name="CreateTracks" type="Button" parent="VBox"]
-margin_top = 136.0
+margin_top = 76.0
 margin_right = 206.0
-margin_bottom = 156.0
+margin_bottom = 96.0
 text = "Create Tracks"
 
 [node name="InsertKey" type="Button" parent="VBox"]
-margin_top = 166.0
+margin_top = 106.0
 margin_right = 206.0
-margin_bottom = 186.0
+margin_bottom = 126.0
 text = "Insert Key"
 
-[node name="FIND BONES" type="Label" parent="VBox"]
-margin_top = 196.0
+[node name="FindBone" type="Label" parent="VBox"]
+margin_top = 136.0
 margin_right = 206.0
-margin_bottom = 210.0
-text = "FIND BONE:"
+margin_bottom = 150.0
+text = "Find Bone:"
 
 [node name="bone_finder" parent="VBox" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 220.0
+margin_top = 160.0
 margin_right = 206.0
 margin_bottom = 600.0
 [connection signal="pressed" from="VBox/FindGizmo" to="." method="_on_FindGizmo_pressed"]
