@@ -1,11 +1,22 @@
 tool
 extends Spatial
 
-# All paths are must be relative to the node (BoneGizmo)
-export(NodePath) var skeleton_path = @"../Skeleton"
-export(NodePath) var animation_path = @"../AnimationPlayer"
+signal path_changed(what)
 
-var edit_bone = ""
+# All paths are must be relative to the node (BoneGizmo)
+export(NodePath) var skeleton_path = @"../Skeleton" setget set_skeleton_path
+func set_skeleton_path(new_val):
+	if new_val == skeleton_path:
+		return
+	skeleton_path = new_val
+	emit_signal("path_changed", "skeleton")
+
+export(NodePath) var animation_path = @"../AnimationPlayer" setget set_animation_path
+func set_animation_path(new_val):
+	if new_val == animation_path:
+		return
+	animation_path = new_val
+	emit_signal("path_changed", "animation")
 
 var running: bool setget set_running,get_running
 func get_running() -> bool: return running
@@ -16,6 +27,15 @@ func set_running(new_val: bool) -> void:
 	elif not new_val:
 		set_process(false)
 	running = new_val
+
+var edit_bone_filter setget set_edit_bone_filter,get_edit_bone_filter
+func get_edit_bone_filter():
+	return get_meta("edit_bone_filter") if has_meta("edit_bone_filter") else ""
+func set_edit_bone_filter(new_val):
+	set_meta("edit_bone_filter", new_val)
+
+var edit_bone = ""
+var allowed_to_run = false
 
 func _ready():
 	set_running(false)
@@ -29,7 +49,7 @@ func reset() -> void:
 	transform = Transform()
 
 func can_run() -> bool:
-	return (get_skeleton() != null) and (get_edit_bone_index() != -1)
+	return allowed_to_run and (get_skeleton() != null) and (get_edit_bone_index() != -1)
 
 func get_animation_player() -> AnimationPlayer:
 	return get_node(animation_path) as AnimationPlayer

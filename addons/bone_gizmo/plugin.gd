@@ -1,3 +1,13 @@
+# New Workflow Idea
+# -----------------
+# Only enable bone gizmo dock when
+# - bone has been chosen
+# - BoneGizmo node is selected
+# - BoneGizmo AnimationPlayer is not playing/stop when selected
+# Auto "Run Gizmo" when dock is enabled
+# Use edit_bone associated with BoneGizmo node.
+# - You can have multiple BoneGizmos
+# - Selecting a BoneGizmo activates it.
 tool
 extends EditorPlugin
 
@@ -18,21 +28,24 @@ func _enter_tree():
 
 	add_control_to_dock( DOCK_SLOT_LEFT_UL, dock)
 	add_custom_type("BoneGizmo", "Spatial", bone_gizmo, icon)
-
+	
 	connect("scene_changed", self, "_on_scene_changed")
 
 func _exit_tree():
+	disconnect("scene_changed", self, "_on_scene_changed")
 	remove_custom_type("BoneGizmo")
 	remove_control_from_docks( dock ) # Remove the dock
 	dock.free() # Erase the control from the memory
 	bone_gizmo = null
 
-	disconnect("scene_changed", self, "_on_scene_changed")
-
-func _on_scene_changed(scene: Node) -> void:
-	dock.find_gizmo()
+func _on_scene_changed(scene):
+	if scene == null:
+		dock.gizmo = null
 
 func handles(object: Object) -> bool:
 	if object is bone_gizmo:
-		dock.find_gizmo()
-	return false
+		dock.gizmo = object
+		return true
+	else:
+		dock.gizmo = null
+		return false

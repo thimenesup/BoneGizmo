@@ -34,4 +34,4 @@ margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 [connection signal="text_changed" from="HBoxContainer/filter" to="." method="_on_filter_text_changed"]
-[connection signal="item_activated" from="bone_list" to="." method="_on_bone_list_item_activated"]
+[connection signal="item_selected" from="bone_list" to="." method="_on_bone_list_item_selected"]

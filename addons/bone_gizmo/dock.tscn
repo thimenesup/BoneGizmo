@@ -106,6 +106,19 @@ anchor_bottom = 0.0
 margin_top = 160.0
 margin_right = 206.0
 margin_bottom = 600.0
+
+[node name="Disabled" type="Panel" parent="."]
+self_modulate = Color( 0.290196, 0.290196, 0.290196, 0.564706 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="Disabled"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Select a BoneGizmo node"
+align = 1
+valign = 1
+autowrap = true
 [connection signal="pressed" from="VBox/FindGizmo" to="." method="_on_FindGizmo_pressed"]
 [connection signal="pressed" from="VBox/ResetGizmo" to="." method="_on_ResetGizmo_pressed"]
 [connection signal="toggled" from="VBox/RunGizmo" to="." method="_on_RunGizmo_toggled"]
