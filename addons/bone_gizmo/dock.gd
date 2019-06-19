@@ -4,7 +4,6 @@ extends Control
 var gizmo_node = null
 onready var bone_finder = find_node('bone_finder')
 
-
 func _on_FindGizmo_pressed():
 	if not get_tree().get_edited_scene_root().find_node("BoneGizmo",true,false):
 		print("BoneGizmo node not found!")
@@ -25,14 +24,6 @@ func _on_RunGizmo_toggled(button_pressed):
 	if not gizmo_node == null:
 		gizmo_node.run = button_pressed
 
-#func _on_SkeletonPath_text_entered(new_text):
-#	if not gizmo_node == null:
-#		gizmo_node.skeleton_path = new_text
-#		if not gizmo_node.has_node(gizmo_node.skeleton_path):
-#			print("BoneGizmo Invalid skeleton path")
-#			return
-#		print("BoneGizmo Set skeleton path")
-
 func _on_Bone_text_entered(new_text):
 	if not gizmo_node == null:
 		gizmo_node.edit_bone = new_text
@@ -41,15 +32,6 @@ func _on_Bone_text_entered(new_text):
 				print("BoneGizmo Invalid bone")
 				return
 		print("BoneGizmo Set bone")
-
-#func _on_AnimationPath_text_entered(new_text):
-#	if not gizmo_node == null:
-#		gizmo_node.animation_path = new_text
-#		if not gizmo_node.has_node(gizmo_node.animation_path):
-#			print("BoneGizmo Invalid animation path")
-#			return
-#		print("BoneGizmo Set animation player path")
-
 
 func _on_CreateTracks_pressed():
 	if not gizmo_node == null:
@@ -60,7 +42,6 @@ func _on_CreateTracks_pressed():
 			print("BoneGizmo Invalid animation path")
 			return
 		gizmo_node.create_tracks()
-
 
 func _on_InsertKey_pressed():
 	if not gizmo_node == null:
