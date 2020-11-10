@@ -4,7 +4,7 @@ extends Spatial
 var run = false
 
 #All paths are must be relative to the node (BoneGizmo)
-export(String) var skeleton_path = "../Armature"
+export(NodePath) var skeleton_path
 export(String) var edit_bone = ""
 export(String) var animation_path = "../AnimationPlayer"
 
